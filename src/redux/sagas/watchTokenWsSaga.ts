@@ -1,11 +1,11 @@
 import { call, takeLatest } from "redux-saga/effects";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { wsSubscribe } from "../slices/wsSlice";
 import { createSocketChannel } from "./helpers/createSocketChannel";
 import { socketWatcher } from "./helpers/socketWatcher";
+import { watchToken } from "../slices/tokenSlice";
 
-export function* handleWebSocketConnection(
-  action: ReturnType<typeof wsSubscribe>
+export function* handleWatchTokenWebSocket(
+  action: ReturnType<typeof watchToken>
 ): Generator<any, void, any> {
   const asset = action.payload;
   const client = new W3CWebSocket(
@@ -15,6 +15,6 @@ export function* handleWebSocketConnection(
   yield call(socketWatcher, socketChannel, client);
 }
 
-export function* watchWebSocket() {
-  yield takeLatest(wsSubscribe.type, handleWebSocketConnection);
+export function* watchTokenWs() {
+  yield takeLatest(watchToken.type, handleWatchTokenWebSocket);
 }

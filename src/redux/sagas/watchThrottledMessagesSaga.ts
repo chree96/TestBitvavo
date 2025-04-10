@@ -1,12 +1,14 @@
 import { throttle, put } from "redux-saga/effects";
-import { wsMessageReceived, wsMessageReceivedRaw } from "../slices/wsSlice";
+import { wsMessageReceived } from "../slices/wsSlice";
+import { updateToken } from "../slices/tokenSlice";
 
 function* handleThrottledMessage(action: any) {
-  const price = action.payload.p;
+  const { p: price, s: symbol } = action.payload;
+  const token = { symbol, price };
   console.log("Throttled message:", price);
-  yield put(wsMessageReceived(price));
+  yield put(updateToken(token));
 }
 
 export function* watchThrottledMessages() {
-  yield throttle(1000, wsMessageReceivedRaw.type, handleThrottledMessage);
+  yield throttle(1000, wsMessageReceived.type, handleThrottledMessage);
 }

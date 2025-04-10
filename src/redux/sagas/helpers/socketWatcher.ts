@@ -4,7 +4,7 @@ import {
   wsConnect,
   wsDisconnect,
   wsError,
-  wsMessageReceivedRaw,
+  wsMessageReceived,
 } from "../../slices/wsSlice";
 
 export function* socketWatcher(socketChannel: any, client: W3CWebSocket) {
@@ -29,7 +29,7 @@ export function* socketWatcher(socketChannel: any, client: W3CWebSocket) {
       } else if (payload.type === wsDisconnect.type) {
         yield put(wsDisconnect());
       } else if (payload.data) {
-        yield put(wsMessageReceivedRaw(payload.data));
+        yield put(wsMessageReceived(payload.data));
       }
     }
   } catch (err) {
