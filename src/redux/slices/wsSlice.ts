@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {WebSocketState} from './wsSlice.types';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { WebSocketState } from "./wsSlice.types";
 
 const initialState: WebSocketState = {
   isConnected: false,
@@ -9,14 +9,14 @@ const initialState: WebSocketState = {
 };
 
 const wsSlice = createSlice({
-  name: 'websocket',
+  name: "websocket",
   initialState,
   reducers: {
-    wsConnect: state => {
+    wsConnect: (state) => {
       state.isConnected = true;
       state.error = null;
     },
-    wsDisconnect: state => {
+    wsDisconnect: (state) => {
       state.isConnected = false;
       state.priceUpdates = null;
     },
@@ -26,6 +26,7 @@ const wsSlice = createSlice({
     wsMessageReceived: (state, action: PayloadAction<number>) => {
       state.priceUpdates = action.payload;
     },
+    wsMessageReceivedRaw: (_state, _action: PayloadAction<any>) => {},
     wsError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
@@ -38,5 +39,6 @@ export const {
   wsSubscribe,
   wsMessageReceived,
   wsError,
+  wsMessageReceivedRaw,
 } = wsSlice.actions;
 export default wsSlice.reducer;
