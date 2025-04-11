@@ -7,7 +7,11 @@ import {
   wsMessageReceived,
 } from "../../slices/wsSlice";
 
-export function* socketWatcher(socketChannel: any, client: W3CWebSocket) {
+export function* socketWatcher(
+  socketChannel: any,
+  client: W3CWebSocket,
+  type: string
+) {
   try {
     while (true) {
       const { payload, disconnectAction, errorAction } = yield race({
@@ -21,7 +25,7 @@ export function* socketWatcher(socketChannel: any, client: W3CWebSocket) {
         client.close();
         break;
       }
-      console.log({ payload });
+
       if (payload.type === wsConnect.type) {
         yield put(wsConnect());
       } else if (payload.type === wsError.type) {
@@ -29,7 +33,7 @@ export function* socketWatcher(socketChannel: any, client: W3CWebSocket) {
       } else if (payload.type === wsDisconnect.type) {
         yield put(wsDisconnect());
       } else if (payload.data) {
-        yield put(wsMessageReceived(payload.data));
+        yield put(wsMessageReceived({ data: payload.data, type }));
       }
     }
   } catch (err) {

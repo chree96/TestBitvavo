@@ -1,4 +1,4 @@
-import { eventChannel } from "redux-saga";
+import { END, eventChannel } from "redux-saga";
 import {
   wsConnect,
   wsDisconnect,
@@ -15,7 +15,6 @@ export function createSocketChannel(client: W3CWebSocket) {
 
     client.onmessage = (message) => {
       try {
-        //Message received: {"e":"trade","E":1743458749603,"s":"BTCUSDT","t":4760861216,"p":"82435.07000000","q":"0.00181000","T":1743458749602,"m":true,"M":true}
         const data = JSON.parse(message.data.toString());
         emitter({ type: wsMessageReceived.type, data });
       } catch (error) {
@@ -33,6 +32,7 @@ export function createSocketChannel(client: W3CWebSocket) {
 
     return () => {
       emitter({ type: wsDisconnect.type });
+      emitter(END);
       client.close();
     };
   });

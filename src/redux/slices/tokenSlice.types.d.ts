@@ -4,6 +4,6 @@ export interface Token {
 }
 
 export interface TokenState {
-  tokenList: any[];
+  tokenList: Token[];
   watchedToken?: Token;
 }
