@@ -37,43 +37,49 @@ jest.mock(
   () => "TokenListCard"
 );
 jest.mock("../src/components/atoms/loader/Loader", () => "Loader");
-jest.mock(
-  "../src/components/molecules/token-list-card/TokenListCard",
-  () => "TokenListCard"
-);
 
 const mockDispatch = jest.fn();
 const mockNavigate = jest.fn();
 
-beforeEach(() => {
-  (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
-  (useNavigation as jest.Mock).mockReturnValue({ navigate: mockNavigate });
-  (useFocusEffect as jest.Mock).mockImplementation((callback) => callback());
-});
+describe("Home Screen", () => {
+  beforeEach(() => {
+    (useDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
+    (useNavigation as jest.Mock).mockReturnValue({ navigate: mockNavigate });
+    (useFocusEffect as jest.Mock).mockImplementation((callback) => callback());
+  });
 
-test("renders token list when tokenList has items", async () => {
-  const mockTokenList = [
-    { symbol: "BTCUSDT", price: "123" },
-    { symbol: "ETHUSDT", price: "345" },
-  ];
+  describe("With token list filled", () => {
+    beforeEach(() => {
+      const mockTokenList = [
+        { symbol: "BTCUSDT", price: "123" },
+        { symbol: "ETHUSDT", price: "345" },
+      ];
 
-  (useSelector as unknown as jest.Mock).mockImplementation((selectorFn) =>
-    selectorFn({ token: { tokenList: mockTokenList } })
-  );
+      (useSelector as unknown as jest.Mock).mockImplementation((selectorFn) =>
+        selectorFn({ token: { tokenList: mockTokenList } })
+      );
+    });
 
-  const { findByTestId } = render(<Home />);
-  const flatList = findByTestId("token-list");
+    test("renders token list", () => {
+      const { findByTestId } = render(<Home />);
+      const flatList = findByTestId("token-list");
 
-  expect(flatList).toBeTruthy();
-});
+      expect(flatList).toBeTruthy();
+    });
+  });
 
-test("renders Loader when tokenList is empty", () => {
-  (useSelector as unknown as jest.Mock).mockImplementation((selectorFn) =>
-    selectorFn({ token: { tokenList: [] } })
-  );
+  describe("when loading", () => {
+    beforeEach(() => {
+      (useSelector as unknown as jest.Mock).mockImplementation((selectorFn) =>
+        selectorFn({ token: { tokenList: [] } })
+      );
+    });
 
-  const { getByTestId } = render(<Home />);
-  const loader = getByTestId("home-loader");
+    test("shows loader", () => {
+      const { getByTestId } = render(<Home />);
+      const loader = getByTestId("home-loader");
 
-  expect(loader).toBeTruthy();
+      expect(loader).toBeTruthy();
+    });
+  });
 });
