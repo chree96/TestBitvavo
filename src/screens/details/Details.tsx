@@ -1,16 +1,13 @@
 import React, { useCallback } from "react";
 import { View, Text, Button } from "react-native";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { updateToken, watchToken } from "../../redux/slices/tokenSlice";
 import { wsDisconnect } from "../../redux/slices/wsSlice";
 import { DetailsRouteProps } from "./Details.types";
 import Loader from "../../components/atoms/loader/Loader";
+import useNavigation from "../../navigator/useNavigation";
 
 const DetailsScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -47,7 +44,7 @@ const DetailsScreen: React.FC = () => {
           Prezzo {watchedToken?.symbol}: ${watchedToken?.price || "--"}
         </Text>
       ) : (
-        <Loader />
+        <Loader testID="details-loader" />
       )}
     </View>
   );

@@ -22,15 +22,18 @@ export function* socketWatcher(
 
       if (disconnectAction || errorAction) {
         console.log("Disconnect action received, closing WebSocket");
+        yield put(wsDisconnect());
         client.close();
         break;
       }
 
       if (payload.type === wsConnect.type) {
+        console.log("socket connected");
         yield put(wsConnect());
       } else if (payload.type === wsError.type) {
         yield put(wsError(payload.error));
       } else if (payload.type === wsDisconnect.type) {
+        console.log("socket disconnected");
         yield put(wsDisconnect());
       } else if (payload.data) {
         yield put(wsMessageReceived({ data: payload.data, type }));
