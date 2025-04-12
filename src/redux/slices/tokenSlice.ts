@@ -13,7 +13,7 @@ const tokenSlice = createSlice({
     updateTokenList: (state, action: PayloadAction<Token[]>) => {
       state.tokenList = action.payload;
     },
-    updateToken: (state, action: PayloadAction<Token>) => {
+    updateToken: (state, action: PayloadAction<Token | undefined>) => {
       state.watchedToken = action.payload;
     },
     watchToken: (_, _action: PayloadAction<string>) => {},

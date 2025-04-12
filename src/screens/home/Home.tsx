@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import { View, Button, FlatList, Text } from "react-native";
+import { View, FlatList } from "react-native";
 import { Screens } from "../../navigator/StackNavigator.types";
 import useNavigation from "../../navigator/useNavigation";
 import { useFocusEffect } from "@react-navigation/native";
@@ -7,7 +7,9 @@ import { watchTokenList } from "../../redux/slices/tokenSlice";
 import { wsDisconnect } from "../../redux/slices/wsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Token } from "../../redux/slices/tokenSlice.types";
+import TokenListCard from "../../components/molecules/token-list-card/TokenListCard";
+import styles from "./Home.styles";
+import Loader from "../../components/atoms/loader/Loader";
 
 const Home: React.FC = memo(() => {
   const navigation = useNavigation();
@@ -26,24 +28,27 @@ const Home: React.FC = memo(() => {
     }, [])
   );
 
-  const renderTokenList = (item: Token) => (
-    <View>
-      <Text>{item.symbol}</Text>
-      <Text>{item.price}</Text>
-    </View>
-  );
+  const goToTokenDetails = (symbol: string) => {
+    navigation.navigate(Screens.DETAILS, { tokenSymbol: symbol });
+  };
 
   return (
-    <View>
-      <Button
-        title="Go to detail"
-        onPress={() => navigation.navigate(Screens.DETAILS)}
-      />
-      <FlatList
-        data={tokenList}
-        keyExtractor={(item) => `list-item-${item.symbol}`}
-        renderItem={({ item }) => renderTokenList(item)}
-      />
+    <View style={styles.container}>
+      {tokenList?.length ? (
+        <FlatList
+          data={tokenList}
+          testID="token-list"
+          keyExtractor={(item) => `list-item-${item.symbol}`}
+          renderItem={({ item }) => (
+            <TokenListCard
+              token={item}
+              onPress={() => goToTokenDetails(item.symbol)}
+            />
+          )}
+        />
+      ) : (
+        <Loader testID="home-loader" />
+      )}
     </View>
   );
 });

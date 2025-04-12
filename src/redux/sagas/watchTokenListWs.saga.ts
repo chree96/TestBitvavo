@@ -4,11 +4,7 @@ import { createSocketChannel } from "./helpers/createSocketChannel";
 import { socketWatcher } from "./helpers/socketWatcher";
 import { watchTokenList } from "../slices/tokenSlice";
 
-export function* handleWatchTokenListWebSocket(
-  action: ReturnType<typeof watchTokenList>
-): Generator<any, void, any> {
-  const asset = action.payload;
-  //Message received: {"e":"trade","E":1743458749603,"s":"BTCUSDT","t":4760861216,"p":"82435.07000000","q":"0.00181000","T":1743458749602,"m":true,"M":true}
+export function* handleWatchTokenListWebSocket(): Generator<any, void, any> {
   const client = new W3CWebSocket(
     `wss://stream.binance.com:9443/ws/!miniTicker@arr`
   );
